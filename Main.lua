@@ -182,8 +182,22 @@ function setupUI()
     ServerRegion.TextStrokeTransparency = 1
     ServerRegion.TextColor3 = Color3.fromRGB(235, 235, 235)
 
-end
+    local Main = PlayerGui.Main
 
+    for _,obj in pairs(Main:GetChildren()) do
+        if obj:IsA("ImageLabel") then
+            obj.Frame.TextLabel.Font = Enum.Font.Gotham
+            obj.Frame.TextLabel.TextColor3 = Color3.fromRGB(235, 235, 235)
+            obj.Icon.ImageColor3 = Color3.fromRGB(235, 235, 235)
+            if not obj.Frame.TextLabel:FindFirstChild("UITextSizeConstraint") then
+                local UITextSizeConstraint = Instance.new("UITextSizeConstraint")
+                UITextSizeConstraint.MaxTextSize = 34
+                UITextSizeConstraint.Parent = obj.Frame.TextLabel  
+            end
+        end
+    end
+
+end
 
 Players.PlayerAdded:Connect(function(player)
     player.CharacterAdded:Connect(function(character)
@@ -196,6 +210,9 @@ for _,player in pairs(Players:GetPlayers()) do
     player.CharacterAdded:Connect(function(character)
         wait(1)
         setupNametag(player, character)
+        if player.Name == Player.Name then
+            setupUI()
+        end
     end)
     if player.Character then
         setupNametag(player, player.Character)
