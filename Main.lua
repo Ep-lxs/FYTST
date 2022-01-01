@@ -156,7 +156,6 @@ for _,player in pairs(Players:GetPlayers()) do
     player.CharacterAdded:Connect(function(character)
         setup(player, character)
     end)
-    if player.Character then
-        setup(player, player.Character)
-    end
+    player.CharacterAdded:Wait()
+    setup(player, player.Character)
 end
