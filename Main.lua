@@ -20,6 +20,8 @@ local function comma_value(amount)
     return formatted
 end
 
+local Dead = {}
+
 local function setup(player, character)
     local Username = Instance.new("Frame")
     Username.Size = Overhead.NameLevel.Size
@@ -138,27 +140,19 @@ end
 
 Players.PlayerAdded:Connect(function(player)
     player.CharacterAdded:Connect(function(character)
-        local function check()
-            if player.Character:FindFirstChild("HumanoidRootPart") and player.Character.HumanoidRootPart:FindFirstChild("OverheadGUI") then
-                setup(player, player.Character)
-            else
-                check()
-            end
-        end
-        delay(6, check)
+        wait(2)
+        setup(player, character)
     end)
 end)
 
 for _,player in pairs(Players:GetPlayers()) do
+    player.CharacterAdded:Connect(function(character)
+        wait(2)
+        setup(player, character)
+    end)
     if player.Character then
-        local function check()
-            if not player then return end
-            if player.Character:FindFirstChild("HumanoidRootPart") and player.Character.HumanoidRootPart:FindFirstChild("OverheadGUI") then
-                setup(player, player.Character)
-            else
-                check()
-            end
-        end
-        delay(6, check)
+        delay(2, function()
+            setup(player, character)
+        end)
     end
 end
