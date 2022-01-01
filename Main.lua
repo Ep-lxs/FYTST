@@ -180,6 +180,7 @@ function setupUI()
     ServerRegion.AnchorPoint = Vector2.new(0, 1)
     ServerRegion.Font = Enum.Font.Gotham
     ServerRegion.TextStrokeTransparency = 1
+    ServerRegion.TextColor3 = Color3.fromRGB(235, 235, 235)
 
 end
 
