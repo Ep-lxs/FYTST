@@ -1,6 +1,5 @@
 -- THIS IS NOT HARMFUL AGAINST ANY GAMES OR ANYBODY, THIS WAS MADE TO IMPROVE IN-GAME UI FOR
 -- https://www.roblox.com/games/6763429099/Flex-Your-Time-or-Steal-Time
-getgenv().Version = tonumber(loadstring(game:HttpGet("https://raw.githubusercontent.com/Ep-lxs/FYTST/main/Version.lua"))().version)
 
 local Players = game:GetService("Players")
 local Rep = game:GetService("ReplicatedStorage")
@@ -22,6 +21,14 @@ local function comma_value(amount)
 end
 
 local function setup(player, character)
+    if not character or player then return end
+
+    local NameGui = Instance.new("BillboardGui")
+    NameGui.Name = "NameGui"
+    NameGui.StudsOffset = Vector3.new(0, 2.5, 0)
+    NameGui.Size = UDim2.new(8, 0, 3, 0)
+    NameGui.Parent = character.Head
+
     local Username = Instance.new("Frame")
     Username.Size = Overhead.NameLevel.Size
     Username.AnchorPoint = Vector2.new(0, 1)
@@ -117,7 +124,6 @@ local function setup(player, character)
         Shadow_U.Text = player.Name
     end
 
-    character.HumanoidRootPart.OverheadGUI.Size = UDim2.new(8, 0, 3, 0)
     character.Humanoid.NameDisplayDistance = 0
     character.Humanoid.HealthDisplayDistance = 0
     Username.Parent = character.HumanoidRootPart.OverheadGUI
@@ -135,6 +141,9 @@ local function setup(player, character)
         Shadow_T.Text = comma_value(player.leaderstats.Time.Value)
     end)
 
+    if character:FindFirstChild("HumanoidRootPart"):FindFirstChildOfClass("BillboardGui") then
+        character:FindFirstChild("HumanoidRootPart"):FindFirstChildOfClass("BillboardGui"):Destroy()
+    end
 end
 
 Players.PlayerAdded:Connect(function(player)
@@ -150,24 +159,6 @@ for _,player in pairs(Players:GetPlayers()) do
         setup(player, character)
     end)
     if player.Character then
-        delay(2, function()
-            setup(player, character)
-        end)
+        setup(player, character)
     end
 end
-
-function checkForUpdate()
-	local newVersion = loadstring(game:HttpGet("https://raw.githubusercontent.com/Ep-lxs/FYTST/main/Version.lua"))().version
-	if not (getgenv().version == newVersion) then
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/Ep-lxs/FYTST/main/Main.lua"))()
-	end
-end
-
-coroutine.wrap(function()
-	while true do
-		wait(5 * 60) -- every 5 minutes we check for a new update
-		checkForUpdate()
-	end
-end)()
-
-
