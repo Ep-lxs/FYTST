@@ -21,12 +21,11 @@ local function comma_value(amount)
 end
 
 local function setup(player, character)
-    if not character or player then return end
-
     local NameGui = Instance.new("BillboardGui")
     NameGui.Name = "NameGui"
-    NameGui.StudsOffset = Vector3.new(0, 2.5, 0)
-    NameGui.Size = UDim2.new(8, 0, 3, 0)
+    NameGui.StudsOffset = Vector3.new(0, 3.5, 0)
+    NameGui.MaxDistance = 50
+    NameGui.Size = UDim2.new(8, 0, 2, 0)
     NameGui.Parent = character.Head
 
     local Username = Instance.new("Frame")
@@ -115,7 +114,13 @@ local function setup(player, character)
     Shadow_T.Position = UDim2.new(0, -2, 0, -2)
     Shadow_T.Parent = Time
 
-    character.HumanoidRootPart.OverheadGUI:Destroy()
+    if character.HumanoidRootPart:FindFirstChild("OverheadGUI") then
+        character.HumanoidRootPart:FindFirstChild("OverheadGUI"):Destroy()
+    end
+
+    if character.Head:FindFirstChild("NameGui") then
+        character.Head:FindFirstChild("NameGui"):Destroy()
+    end
         
     if player.DisplayName == player.Name then
         Main_U.Text = player.Name
@@ -142,14 +147,17 @@ end
 
 Players.PlayerAdded:Connect(function(player)
     player.CharacterAdded:Connect(function(character)
+        wait(1)
         setup(player, character)
     end)
 end)
 
 for _,player in pairs(Players:GetPlayers()) do
     player.CharacterAdded:Connect(function(character)
+        wait(1)
         setup(player, character)
     end)
-    player.CharacterAdded:Wait()
-    setup(player, player.Character)
+    if player.Character then
+        setup(player, player.Character)
+    end
 end
