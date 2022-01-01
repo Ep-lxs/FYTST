@@ -1,3 +1,7 @@
+--  THIS SCRIPT IS NOT MEANT TO HARM ANY GAME, IT IS MADE TO IMPROVE THE UI FOR
+-- https://www.roblox.com/games/6763429099/Flex-Your-Time-or-Steal-Time#
+-- BECAUSE THE CURRENT UI IS SHIT
+
 local Players = game:GetService("Players")
 local Rep = game:GetService("ReplicatedStorage")
 
