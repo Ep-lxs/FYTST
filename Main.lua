@@ -159,6 +159,6 @@ for _,player in pairs(Players:GetPlayers()) do
         setup(player, character)
     end)
     if player.Character then
-        setup(player, character)
+        setup(player, player.Character)
     end
 end
