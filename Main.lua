@@ -1,12 +1,10 @@
--- THIS IS NOT HARMFUL AGAINST ANY GAMES OR ANYBODY, THIS WAS MADE TO IMPROVE IN-GAME UI FOR
--- https://www.roblox.com/games/6763429099/Flex-Your-Time-or-Steal-Time
-
 local Players = game:GetService("Players")
 local Rep = game:GetService("ReplicatedStorage")
 
 local Player = Players.LocalPlayer
 local Character = Player.Character or Player.CharacterAdded:Wait()
 
+local PlayerGui = Player:WaitForChild("PlayerGui")
 local Overhead = Rep.OverheadGUI.OverheadGUI
 
 local function comma_value(amount)
@@ -20,13 +18,12 @@ local function comma_value(amount)
     return formatted
 end
 
-local function setup(player, character)
+local function setupNametag(player, character)
     local NameGui = Instance.new("BillboardGui")
     NameGui.Name = "NameGui"
     NameGui.StudsOffset = Vector3.new(0, 3.5, 0)
     NameGui.MaxDistance = 50
     NameGui.Size = UDim2.new(8, 0, 2, 0)
-    NameGui.Parent = character.Head
 
     local Username = Instance.new("Frame")
     Username.Size = Overhead.NameLevel.Size
@@ -34,6 +31,7 @@ local function setup(player, character)
     Username.Position = UDim2.new(0, 0, 1, 0)
     Username.BackgroundTransparency = 1
     Username.Name = "Username"
+    Username.Parent = NameGui
     
     local Main_U = Instance.new("TextLabel")
     Main_U.Size = UDim2.new(1, 0, 1, 0)
@@ -63,6 +61,7 @@ local function setup(player, character)
     Health.BackgroundTransparency = 1
     Health.Position = Overhead.Health.Position
     Health.Name = "Health"
+    Health.Parent = NameGui
 
     local Main_H = Instance.new("TextLabel")
     Main_H.BackgroundTransparency = 1
@@ -91,6 +90,7 @@ local function setup(player, character)
     Time.BackgroundTransparency = 1
     Time.Position = Overhead.Time.Position
     Time.Name = "Time"
+    Time.Parent = NameGui
 
     local Main_T = Instance.new("TextLabel")
     Main_T.BackgroundTransparency = 1
@@ -114,6 +114,11 @@ local function setup(player, character)
     Shadow_T.Position = UDim2.new(0, -2, 0, -2)
     Shadow_T.Parent = Time
 
+    if player.DisplayName == player.Name then
+        Main_U.Text = player.Name
+        Shadow_U.Text = player.Name
+    end
+
     if character.HumanoidRootPart:FindFirstChild("OverheadGUI") then
         character.HumanoidRootPart:FindFirstChild("OverheadGUI"):Destroy()
     end
@@ -121,17 +126,9 @@ local function setup(player, character)
     if character.Head:FindFirstChild("NameGui") then
         character.Head:FindFirstChild("NameGui"):Destroy()
     end
-        
-    if player.DisplayName == player.Name then
-        Main_U.Text = player.Name
-        Shadow_U.Text = player.Name
-    end
     
     character.Humanoid.NameDisplayDistance = 0
     character.Humanoid.HealthDisplayDistance = 0
-    Username.Parent = NameGui
-    Health.Parent = NameGui
-    Time.Parent = NameGui
 
     character:WaitForChild("Humanoid").HealthChanged:Connect(function()
         Main_H.Text = math.floor(character.Humanoid.Health).."/"..character.Humanoid.MaxHealth
@@ -143,21 +140,66 @@ local function setup(player, character)
         Main_T.Text = comma_value(player.leaderstats.Time.Value)
         Shadow_T.Text = comma_value(player.leaderstats.Time.Value)
     end)
+
+    NameGui.Parent = character.Head
 end
+
+function setupWorkspace()
+    local SurfaceGui = workspace.Description.SurfaceGui
+    SurfaceGui.AlwaysOnTop = false
+    SurfaceGui.TextLabel.Font = Enum.Font.GothamSemibold
+    SurfaceGui.TextLabel.TextColor3 = Color3.fromRGB(235, 235, 235)
+    SurfaceGui.Parent.Size = Vector3.new(30, 3.3, 0.09)
+
+    local SurfaceGui_2 = workspace.GameLikes.SurfaceGui
+    SurfaceGui_2.AlwaysOnTop = false
+    SurfaceGui_2.TextLabel.Font = Enum.Font.GothamSemibold
+    SurfaceGui_2.TextLabel.TextColor3 = Color3.fromRGB(235, 235, 235)
+end
+
+function setupUI()
+    local Killfeed = PlayerGui:FindFirstChild("Kill Feed")
+    Killfeed.FeedManager.killMessage.Font = Enum.Font.Gotham
+    Killfeed.FeedManager.killMessage.TextColor3 = Color3.fromRGB(235, 235, 235)
+    Killfeed.FeedManager.killMessage.TextStrokeTransparency = 1
+    Killfeed.FeedManager.killMessage.TextXAlignment = Enum.TextXAlignment.Right
+
+    Killfeed.Feed.AnchorPoint = Vector2.new(1, 1)
+    Killfeed.Feed.Position = UDim2.new(1, 0, 1, 0)
+    Killfeed.Feed.UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+    if not Killfeed:FindFirstChild("UIPadding") then
+        local UIPadding = Instance.new("UIPadding")
+        UIPadding.PaddingRight = UDim.new(0.002, 0)
+        UIPadding.PaddingBottom = UDim.new(0.005, 0)
+        UIPadding.Parent = Killfeed 
+    end
+
+    local ServerRegion = PlayerGui.Server.TextLabel
+    ServerRegion.Position = UDim2.new(0.002, 0, 1, 0)
+    ServerRegion.AnchorPoint = Vector2.new(0, 1)
+    ServerRegion.Font = Enum.Font.Gotham
+    ServerRegion.TextStrokeTransparency = 1
+
+end
+
 
 Players.PlayerAdded:Connect(function(player)
     player.CharacterAdded:Connect(function(character)
         wait(1)
-        setup(player, character)
+        setupNametag(player, character)
     end)
 end)
 
 for _,player in pairs(Players:GetPlayers()) do
     player.CharacterAdded:Connect(function(character)
         wait(1)
-        setup(player, character)
+        setupNametag(player, character)
     end)
     if player.Character then
-        setup(player, player.Character)
+        setupNametag(player, player.Character)
     end
 end
+
+setupWorkspace()
+setupUI()
