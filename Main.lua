@@ -148,14 +148,12 @@ end
 
 Players.PlayerAdded:Connect(function(player)
     player.CharacterAdded:Connect(function(character)
-        wait(2)
         setup(player, character)
     end)
 end)
 
 for _,player in pairs(Players:GetPlayers()) do
     player.CharacterAdded:Connect(function(character)
-        wait(2)
         setup(player, character)
     end)
     if player.Character then
