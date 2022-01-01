@@ -115,15 +115,13 @@ local function setup(player, character)
     Shadow_T.Position = UDim2.new(0, -2, 0, -2)
     Shadow_T.Parent = Time
 
-    for _,obj in pairs(character.HumanoidRootPart.OverheadGUI:GetChildren()) do
-        obj:Destroy()
-    end
-
+    character.HumanoidRootPart.OverheadGUI:Destroy()
+        
     if player.DisplayName == player.Name then
         Main_U.Text = player.Name
         Shadow_U.Text = player.Name
     end
-
+    
     character.Humanoid.NameDisplayDistance = 0
     character.Humanoid.HealthDisplayDistance = 0
     Username.Parent = NameGui
@@ -140,10 +138,6 @@ local function setup(player, character)
         Main_T.Text = comma_value(player.leaderstats.Time.Value)
         Shadow_T.Text = comma_value(player.leaderstats.Time.Value)
     end)
-
-    if character:FindFirstChild("HumanoidRootPart"):FindFirstChildOfClass("BillboardGui") then
-        character:FindFirstChild("HumanoidRootPart"):FindFirstChildOfClass("BillboardGui"):Destroy()
-    end
 end
 
 Players.PlayerAdded:Connect(function(player)
