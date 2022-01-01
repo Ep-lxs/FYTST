@@ -1,5 +1,6 @@
 -- THIS IS NOT HARMFUL AGAINST ANY GAMES OR ANYBODY, THIS WAS MADE TO IMPROVE IN-GAME UI FOR
 -- https://www.roblox.com/games/6763429099/Flex-Your-Time-or-Steal-Time
+getgenv().Version = tonumber(loadstring(game:HttpGet("https://raw.githubusercontent.com/Ep-lxs/FYTST/main/Version.lua"))().version)
 
 local Players = game:GetService("Players")
 local Rep = game:GetService("ReplicatedStorage")
@@ -19,8 +20,6 @@ local function comma_value(amount)
     end
     return formatted
 end
-
-local Dead = {}
 
 local function setup(player, character)
     local Username = Instance.new("Frame")
@@ -118,7 +117,7 @@ local function setup(player, character)
         Shadow_U.Text = player.Name
     end
 
-    character.HumanoidRootPart.OverheadGUI.Size = UDim2.new(7, 0, 3, 0)
+    character.HumanoidRootPart.OverheadGUI.Size = UDim2.new(8, 0, 3, 0)
     character.Humanoid.NameDisplayDistance = 0
     character.Humanoid.HealthDisplayDistance = 0
     Username.Parent = character.HumanoidRootPart.OverheadGUI
@@ -156,3 +155,19 @@ for _,player in pairs(Players:GetPlayers()) do
         end)
     end
 end
+
+function checkForUpdate()
+	local newVersion = loadstring(game:HttpGet("https://raw.githubusercontent.com/Ep-lxs/FYTST/main/Version.lua"))().version
+	if not (getgenv().version == newVersion) then
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/Ep-lxs/FYTST/main/Main.lua"))()
+	end
+end
+
+coroutine.wrap(function()
+	while true do
+		wait(5 * 60) -- every 5 minutes we check for a new update
+		checkForUpdate()
+	end
+end)()
+
+
