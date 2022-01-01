@@ -126,9 +126,9 @@ local function setup(player, character)
 
     character.Humanoid.NameDisplayDistance = 0
     character.Humanoid.HealthDisplayDistance = 0
-    Username.Parent = character.HumanoidRootPart.OverheadGUI
-    Health.Parent = character.HumanoidRootPart.OverheadGUI
-    Time.Parent = character.HumanoidRootPart.OverheadGUI
+    Username.Parent = NameGui
+    Health.Parent = NameGui
+    Time.Parent = NameGui
 
     character:WaitForChild("Humanoid").HealthChanged:Connect(function()
         Main_H.Text = math.floor(character.Humanoid.Health).."/"..character.Humanoid.MaxHealth
