@@ -128,7 +128,7 @@ local function setupNametag(player, character)
     end
 
     if character.Head:FindFirstChild("NameGui") then
-        character.Head:FindFirstChild("NameGui"):Destroy()
+        character.Head:FindFirstChild("NameGui").PlayerToHideFrom = Player
     end
     
     character.Humanoid.NameDisplayDistance = 0
