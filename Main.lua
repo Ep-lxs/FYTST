@@ -23,16 +23,44 @@ local function comma_value(amount)
 end
 
 local function setupNametag(player, character)
+    
     local NameGui = Instance.new("BillboardGui")
     NameGui.Name = "NameGui"
-    NameGui.StudsOffset = Vector3.new(0, 3.5, 0)
+    NameGui.StudsOffset = Vector3.new(0, 2, 0)
     NameGui.MaxDistance = 50
-    NameGui.Size = UDim2.new(8, 0, 2, 0)
+    NameGui.Size = UDim2.new(7, 0, 1.25, 0)
+    
+    local Time = Instance.new("Frame")
+    Time.Size = UDim2.new(1, 0, 0.3, 0)
+    Time.BackgroundTransparency = 1
+    Time.Name = "Time"
+    Time.Parent = NameGui 
+    
+    local Main_T = Instance.new("TextLabel")
+    Main_T.BackgroundTransparency = 1
+    Main_T.Size = UDim2.new(1, 0, 1, 0)
+    Main_T.Name = "Main"
+    Main_T.Text = comma_value(player.leaderstats.Time.Value)
+    Main_T.TextScaled = true
+    Main_T.Font = Enum.Font.Gotham
+    Main_T.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Main_T.ZIndex = 2
+    Main_T.Parent = Time
 
+    local Shadow_T = Instance.new("TextLabel")
+    Shadow_T.Size = UDim2.new(1, 0, 1, 0)
+    Shadow_T.Name = "Shadow"
+    Shadow_T.BackgroundTransparency = 1
+    Shadow_T.TextScaled = true
+    Shadow_T.Text = comma_value(player.leaderstats.Time.Value)
+    Shadow_T.Font = Enum.Font.Gotham
+    Shadow_T.TextColor3 = Color3.fromRGB(0, 0, 0)
+    Shadow_T.Position = UDim2.new(0, -2, 0, -2)
+    Shadow_T.Parent = Time
+    
     local Username = Instance.new("Frame")
-    Username.Size = Overhead.NameLevel.Size
-    Username.AnchorPoint = Vector2.new(0, 1)
-    Username.Position = UDim2.new(0, 0, 1, 0)
+    Username.Size = UDim2.new(1, 0, 0.25, 0)
+    Username.Position = UDim2.new(0, 0, 0.4, 0)
     Username.BackgroundTransparency = 1
     Username.Name = "Username"
     Username.Parent = NameGui
@@ -59,64 +87,27 @@ local function setupNametag(player, character)
     Shadow_U.BackgroundTransparency = 1
     Shadow_U.Position = UDim2.new(0, -2, 0, -2)
     Shadow_U.Parent = Username
-
+    
     local Health = Instance.new("Frame")
-    Health.Size = Overhead.Health.Size
+    Health.Size = UDim2.new(0.2, 0, 0.225, 0)
     Health.BackgroundTransparency = 1
-    Health.Position = Overhead.Health.Position
+    Health.AnchorPoint = Vector2.new(0.5, 1)
+    Health.Position = UDim2.new(0.5, 0, 1, 0)
     Health.Name = "Health"
     Health.Parent = NameGui
 
-    local Main_H = Instance.new("TextLabel")
-    Main_H.BackgroundTransparency = 1
-    Main_H.Size = UDim2.new(1, 0, 1, 0)
-    Main_H.Name = "Main"
-    Main_H.Text = math.floor(character.Humanoid.Health).."/"..character.Humanoid.MaxHealth
-    Main_H.TextScaled = true
-    Main_H.Font = Enum.Font.Gotham
-    Main_H.TextColor3 = Color3.fromHSV((character.Humanoid.Health/character.Humanoid.MaxHealth)*.3, 1, 1)
-    Main_H.ZIndex = 2
-    Main_H.Parent = Health
-
-    local Shadow_H = Instance.new("TextLabel")
-    Shadow_H.Size = UDim2.new(1, 0, 1, 0)
-    Shadow_H.Name = "Shadow"
-    Shadow_H.BackgroundTransparency = 1
-    Shadow_H.TextScaled = true
-    Shadow_H.Text = math.floor(character.Humanoid.Health).."/"..character.Humanoid.MaxHealth
-    Shadow_H.Font = Enum.Font.Gotham
-    Shadow_H.TextColor3 = Color3.fromRGB(0, 0, 0)
-    Shadow_H.Position = UDim2.new(0, -2, 0, -2)
-    Shadow_H.Parent = Health
-
-    local Time = Instance.new("Frame")
-    Time.Size = Overhead.Time.Size
-    Time.BackgroundTransparency = 1
-    Time.Position = Overhead.Time.Position
-    Time.Name = "Time"
-    Time.Parent = NameGui
-
-    local Main_T = Instance.new("TextLabel")
-    Main_T.BackgroundTransparency = 1
-    Main_T.Size = UDim2.new(1, 0, 1, 0)
-    Main_T.Name = "Main"
-    Main_T.Text = comma_value(player.leaderstats.Time.Value)
-    Main_T.TextScaled = true
-    Main_T.Font = Enum.Font.Gotham
-    Main_T.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Main_T.ZIndex = 2
-    Main_T.Parent = Time
-
-    local Shadow_T = Instance.new("TextLabel")
-    Shadow_T.Size = UDim2.new(1, 0, 1, 0)
-    Shadow_T.Name = "Shadow"
-    Shadow_T.BackgroundTransparency = 1
-    Shadow_T.TextScaled = true
-    Shadow_T.Text = comma_value(player.leaderstats.Time.Value)
-    Shadow_T.Font = Enum.Font.Gotham
-    Shadow_T.TextColor3 = Color3.fromRGB(0, 0, 0)
-    Shadow_T.Position = UDim2.new(0, -2, 0, -2)
-    Shadow_T.Parent = Time
+    local Slider = Instance.new("Frame")
+    Slider.BackgroundTransparency = 1
+    Slider.Size = UDim2.new(character.Humanoid.Health/character.Humanoid.MaxHealth, 0, 1, 0)
+    Slider.Name = "Slider"
+    Slider.BackgroundColor3 = Color3.fromHSV((character.Humanoid.Health/character.Humanoid.MaxHealth)*.3, 1, 1)
+    Slider.Parent = Health
+    
+    local UIStroke = Instance.new("UIStroke")
+    UIStroke.Transparency = 0.2
+    UIStroke.Thickness = 1.51
+    UIStroke.Parent = Health
+    UIStroke.ApplyStrokeMode = "Border"
 
     if player.DisplayName == player.Name then
         Main_U.Text = player.Name
@@ -135,9 +126,8 @@ local function setupNametag(player, character)
     character.Humanoid.HealthDisplayDistance = 0
 
     character:WaitForChild("Humanoid").HealthChanged:Connect(function()
-        Main_H.Text = math.floor(character.Humanoid.Health).."/"..character.Humanoid.MaxHealth
-        Shadow_H.Text = math.floor(character.Humanoid.Health).."/"..character.Humanoid.MaxHealth
-        Main_H.TextColor3 = Color3.fromHSV((character.Humanoid.Health/character.Humanoid.MaxHealth)*.3, 1, 1)
+        Slider.Size = UDim2.new(character.Humanoid.Health/character.Humanoid.MaxHealth, 0, 1, 0)
+        Slider.BackgroundColor3 = Color3.fromHSV((character.Humanoid.Health/character.Humanoid.MaxHealth)*.3, 1, 1)
     end)
 
     player.leaderstats.Time:GetPropertyChangedSignal("Value"):Connect(function()
