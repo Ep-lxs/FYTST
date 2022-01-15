@@ -26,12 +26,13 @@ local function setupNametag(player, character)
     
     local NameGui = Instance.new("BillboardGui")
     NameGui.Name = "NameGui"
-    NameGui.StudsOffset = Vector3.new(0, 2, 0)
+    NameGui.StudsOffset = Vector3.new(0, 1.5, 0)
     NameGui.MaxDistance = 50
-    NameGui.Size = UDim2.new(7, 0, 1.25, 0)
+    NameGui.ZIndexBehavior = "Global"
+    NameGui.Size = UDim2.new(7, 0, 0.9, 0)
     
     local Time = Instance.new("Frame")
-    Time.Size = UDim2.new(1, 0, 0.3, 0)
+    Time.Size = UDim2.new(1, 0, 0.375, 0)
     Time.BackgroundTransparency = 1
     Time.Name = "Time"
     Time.Parent = NameGui 
@@ -59,8 +60,8 @@ local function setupNametag(player, character)
     Shadow_T.Parent = Time
     
     local Username = Instance.new("Frame")
-    Username.Size = UDim2.new(1, 0, 0.25, 0)
-    Username.Position = UDim2.new(0, 0, 0.4, 0)
+    Username.Size = UDim2.new(1, 0, 0.3, 0)
+    Username.Position = UDim2.new(0, 0, 0.375, 0)
     Username.BackgroundTransparency = 1
     Username.Name = "Username"
     Username.Parent = NameGui
@@ -68,7 +69,7 @@ local function setupNametag(player, character)
     local Main_U = Instance.new("TextLabel")
     Main_U.Size = UDim2.new(1, 0, 1, 0)
     Main_U.Name = "Main"
-    Main_U.Text = player.DisplayName.." (@"..player.Name..")"
+    Main_U.Text = "@"..player.Name
     Main_U.Font = Enum.Font.Gotham
     Main_U.TextColor3 = Color3.fromRGB(255, 255, 255)
     Main_U.Font = Enum.Font.Gotham
@@ -80,7 +81,7 @@ local function setupNametag(player, character)
     local Shadow_U = Instance.new("TextLabel")
     Shadow_U.Size = UDim2.new(1, 0, 1, 0)
     Shadow_U.Name = "Shadow"
-    Shadow_U.Text = player.DisplayName.." (@"..player.Name..")"
+    Shadow_U.Text = "@"..player.Name
     Shadow_U.Font = Enum.Font.Gotham
     Shadow_U.TextColor3 = Color3.fromRGB(0, 0, 0)
     Shadow_U.TextScaled = true
@@ -89,18 +90,18 @@ local function setupNametag(player, character)
     Shadow_U.Parent = Username
     
     local Health = Instance.new("Frame")
-    Health.Size = UDim2.new(0.2, 0, 0.225, 0)
+    Health.Size = UDim2.new(0.3, 0, 0.135, 0)
     Health.BackgroundTransparency = 1
-    Health.AnchorPoint = Vector2.new(0.5, 1)
-    Health.Position = UDim2.new(0.5, 0, 1, 0)
+    Health.AnchorPoint = Vector2.new(0.5, 0)
+    Health.Position = UDim2.new(0.5, 0, 0.75, 0)
     Health.Name = "Health"
     Health.Parent = NameGui
 
     local Slider = Instance.new("Frame")
-    Slider.BackgroundTransparency = 1
+    Slider.BackgroundTransparency = 0
     Slider.Size = UDim2.new(character.Humanoid.Health/character.Humanoid.MaxHealth, 0, 1, 0)
     Slider.Name = "Slider"
-    Slider.BackgroundColor3 = Color3.fromHSV((character.Humanoid.Health/character.Humanoid.MaxHealth)*.3, 1, 1)
+    Slider.BackgroundColor3 = Color3.fromHSV((character.Humanoid.Health/character.Humanoid.MaxHealth)*.28, .9, .9)
     Slider.Parent = Health
     
     local UIStroke = Instance.new("UIStroke")
@@ -109,25 +110,36 @@ local function setupNametag(player, character)
     UIStroke.Parent = Health
     UIStroke.ApplyStrokeMode = "Border"
 
-    if player.DisplayName == player.Name then
-        Main_U.Text = player.Name
-        Shadow_U.Text = player.Name
-    end
+   -- if player.DisplayName == player.Name then
+   --     Main_U.Text = player.Name
+   --     Shadow_U.Text = player.Name
+   -- end
 
     if character.HumanoidRootPart:FindFirstChild("OverheadGUI") then
         character.HumanoidRootPart:FindFirstChild("OverheadGUI").PlayerToHideFrom = Player
     end
 
-    if character.Head:FindFirstChild("NameGui") then
-        character.Head:FindFirstChild("NameGui"):Destroy()
+    for _,v in pairs(character.Head:GetChildren()) do
+        if v:IsA("BillboardGui") then
+            v:Destroy()
+        end
     end
     
     character.Humanoid.NameDisplayDistance = 0
     character.Humanoid.HealthDisplayDistance = 0
 
     character:WaitForChild("Humanoid").HealthChanged:Connect(function()
-        Slider.Size = UDim2.new(character.Humanoid.Health/character.Humanoid.MaxHealth, 0, 1, 0)
-        Slider.BackgroundColor3 = Color3.fromHSV((character.Humanoid.Health/character.Humanoid.MaxHealth)*.3, 1, 1)
+        if Slider then
+            Slider:TweenSize(
+                UDim2.new(character.Humanoid.Health/character.Humanoid.MaxHealth, 0, 1, 0), 
+                Enum.EasingDirection.In,   
+                Enum.EasingStyle.Linear, 
+                (character.Humanoid.Health/character.Humanoid.MaxHealth) * 0.5,      
+                true    
+            )
+        end
+        --Slider.Size = UDim2.new(character.Humanoid.Health/character.Humanoid.MaxHealth, 0, 1, 0)
+        Slider.BackgroundColor3 = Color3.fromHSV((character.Humanoid.Health/character.Humanoid.MaxHealth)*.28, .9, .9)
     end)
 
     player.leaderstats.Time:GetPropertyChangedSignal("Value"):Connect(function()
@@ -201,16 +213,17 @@ Players.PlayerAdded:Connect(function(player)
 end)
 
 for _,player in pairs(Players:GetPlayers()) do
+    local character = player.Character or player.CharacterAdded:Wait()
+    setupNametag(player, character)
+
     player.CharacterAdded:Connect(function(character)
-        wait(1)
-        setupNametag(player, character)
-        if player.Name == Player.Name then
-            setupUI()
-        end
+        delay(1, function()
+            setupNametag(player, character)
+            if player.Name == Player.Name then
+                setupUI()
+            end
+        end)
     end)
-    if player.Character then
-        setupNametag(player, player.Character)
-    end
 end
 
 setupWorkspace()
